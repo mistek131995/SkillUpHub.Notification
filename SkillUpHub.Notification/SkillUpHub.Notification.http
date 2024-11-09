@@ -1,0 +1,6 @@
+@SkillUpHub.Notification_HostAddress = http://localhost:5291
+
+GET {{SkillUpHub.Notification_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

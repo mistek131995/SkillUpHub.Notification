@@ -1,0 +1,10 @@
+bin/
+obj/
+/packages/
+riderModule.iml
+/_ReSharper.Caches/
+SkillUpHub.Notification/appsettings.json
+SkillUpHub.Notification/appsettings.json
+.idea/.idea.SkillUpHub.Notification/.idea/encodings.xml
+.idea/.idea.SkillUpHub.Notification/.idea/indexLayout.xml
+.idea/.idea.SkillUpHub.Notification/.idea/vcs.xml
