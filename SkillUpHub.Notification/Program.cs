@@ -2,6 +2,8 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using SkillUpHub.Notification;
+using SkillUpHub.Notification.Interfaces;
+using SkillUpHub.Notification.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,13 +25,12 @@ builder.Services.AddAuthentication(option =>
         ValidAudience = "SkillHub.Services",
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("SecretKey").Value)) // Ваш секретный ключ
     };
-
-    // Важно: поддержка gRPC Web
+    
     options.Events = new JwtBearerEvents
     {
         OnMessageReceived = context =>
         {
-            var accessToken = context.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            var accessToken = context.Request.Query["access_token"];
             if (!string.IsNullOrEmpty(accessToken))
             {
                 context.Token = accessToken;
@@ -40,6 +41,8 @@ builder.Services.AddAuthentication(option =>
 });
 
 #endregion
+
+builder.Services.Configure<RabbitMqSettings>(builder.Configuration.GetSection("RabbitMqSettings"));
 
 builder.Services.AddCors(o => o.AddPolicy("AllowAll", builder =>
 {
@@ -53,8 +56,14 @@ builder.Services.AddSignalR();
 
 var app = builder.Build();
 
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.UseCors("AllowAll");
 app.UseRouting();
-app.MapHub<NotificationHub>("/notificationHub").RequireAuthorization();
+app.MapHub<NotificationHub>("/notificationHub");
+
+var rabbitMqService = app.Services.GetService<IMessageBusClient>();
+rabbitMqService!.Initialize();
 
 app.Run();

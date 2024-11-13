@@ -2,6 +2,8 @@
 
 public interface IMessageBusClient
 {
-    void PublishMessage<T>(T message, string routingKey);
+    void Initialize();
+    void PublishMessage<T>(T message, string exchange, string routingKey);
+    void PublishErrorMessage(Exception exception);
     void Subscribe<T>(string queueName, Func<T, Task> onMessageReceived);
 }

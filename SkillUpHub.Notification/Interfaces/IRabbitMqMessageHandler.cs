@@ -2,5 +2,6 @@
 
 public interface IRabbitMqMessageHandler
 {
-    public Task CreateAccountFailureAsync(Guid sessionId);
+    public Task SendToastAsync(Guid sessionId);
+    public Task SendEmailAsync();
 }

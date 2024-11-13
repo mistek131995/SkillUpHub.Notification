@@ -11,7 +11,7 @@ public class RabbitMqListenerService(
         var scope = serviceProvider.CreateScope();
         var servicesHandler = scope.ServiceProvider.GetService<IRabbitMqMessageHandler>()!;
         
-        messageBusClient.Subscribe("", async (Guid sessionId) => await servicesHandler.CreateAccountFailureAsync(sessionId));
+        //messageBusClient.Subscribe("", async (Guid sessionId) => await servicesHandler.CreateAccountFailureAsync(sessionId));
         
         return Task.CompletedTask;
     }

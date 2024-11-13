@@ -4,7 +4,12 @@ namespace SkillUpHub.Notification.Handlers;
 
 public class RabbitMqMessageHandler : IRabbitMqMessageHandler
 {
-    public Task CreateAccountFailureAsync(Guid sessionId)
+    public Task SendToastAsync(Guid sessionId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task SendEmailAsync()
     {
         throw new NotImplementedException();
     }
