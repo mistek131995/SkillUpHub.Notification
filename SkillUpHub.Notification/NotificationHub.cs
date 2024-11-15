@@ -4,7 +4,6 @@ namespace SkillUpHub.Notification;
 
 public class NotificationHub : Hub
 {
-    
     private Dictionary<Guid, string> users = new ();
     public override async Task OnConnectedAsync()
     {

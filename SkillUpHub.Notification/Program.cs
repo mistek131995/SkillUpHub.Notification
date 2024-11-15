@@ -2,6 +2,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using SkillUpHub.Notification;
+using SkillUpHub.Notification.BackgroundServices;
 using SkillUpHub.Notification.Clients;
 using SkillUpHub.Notification.Handlers;
 using SkillUpHub.Notification.Interfaces;
@@ -48,6 +49,7 @@ builder.Services.Configure<RabbitMqSettings>(builder.Configuration.GetSection("R
 
 builder.Services.AddSingleton<IMessageBusClient, RabbitMqClient>();
 builder.Services.AddScoped<IRabbitMqMessageHandler, RabbitMqMessageHandler>();
+builder.Services.AddHostedService<RabbitMqListenerService>();
 
 builder.Services.AddCors(o => o.AddPolicy("AllowAll", builder =>
 {

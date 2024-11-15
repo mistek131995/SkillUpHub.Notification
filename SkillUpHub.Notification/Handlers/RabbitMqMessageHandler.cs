@@ -1,12 +1,17 @@
-﻿using SkillUpHub.Notification.Interfaces;
+﻿using Microsoft.AspNetCore.SignalR;
+using SkillUpHub.Notification.Interfaces;
 
 namespace SkillUpHub.Notification.Handlers;
 
-public class RabbitMqMessageHandler : IRabbitMqMessageHandler
+public class RabbitMqMessageHandler(IHubContext<NotificationHub> hubContext) : IRabbitMqMessageHandler
 {
-    public Task SendToastAsync(Guid sessionId)
+    public async Task SendToastAsync(Guid userId, string title, string message)
     {
-        throw new NotImplementedException();
+        await hubContext.Clients.User(userId.ToString()).SendAsync("", new
+        {
+            Title = title,
+            Message = message
+        });
     }
 
     public Task SendEmailAsync(string sendTo, string subject, string message)
