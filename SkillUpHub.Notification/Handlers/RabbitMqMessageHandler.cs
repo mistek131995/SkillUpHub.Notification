@@ -9,7 +9,7 @@ public class RabbitMqMessageHandler : IRabbitMqMessageHandler
         throw new NotImplementedException();
     }
 
-    public Task SendEmailAsync()
+    public Task SendEmailAsync(string sendTo, string subject, string message)
     {
         throw new NotImplementedException();
     }

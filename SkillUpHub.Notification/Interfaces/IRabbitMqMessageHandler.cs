@@ -3,5 +3,5 @@
 public interface IRabbitMqMessageHandler
 {
     public Task SendToastAsync(Guid sessionId);
-    public Task SendEmailAsync();
+    public Task SendEmailAsync(string sendTo, string subject, string message);
 }
