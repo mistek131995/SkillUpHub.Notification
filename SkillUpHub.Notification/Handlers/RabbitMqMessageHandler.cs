@@ -7,11 +7,9 @@ public class RabbitMqMessageHandler(IHubContext<NotificationHub> hubContext) : I
 {
     public async Task SendToastAsync(Guid userId, string title, string message)
     {
-        await hubContext.Clients.User(userId.ToString()).SendAsync("", new
-        {
-            Title = title,
-            Message = message
-        });
+        var connectionId = NotificationHub.GetConnectionByUserId(userId);
+        
+        await hubContext.Clients.Client(connectionId).SendAsync("show-toast-notification", title, message);
     }
 
     public Task SendEmailAsync(string sendTo, string subject, string message)
