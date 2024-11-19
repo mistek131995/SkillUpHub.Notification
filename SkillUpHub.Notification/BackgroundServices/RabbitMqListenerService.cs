@@ -17,20 +17,21 @@ public class RabbitMqListenerService(
         var scope = serviceProvider.CreateScope();
         var servicesHandler = scope.ServiceProvider.GetService<IRabbitMqMessageHandler>()!;
         
-        var queues = options.Value.Queues ?? throw new NullReferenceException("Не удалось найти очереди в appsettings.json");
+        var exchange = options.Value.Exchanges?.FirstOrDefault(x => x.Id == "notification") ?? 
+                       throw new NullReferenceException("Не удалось найти обменники в appsettings.json");
 
-        var toastQueue = queues.FirstOrDefault(x => x.Id == "notification.toast") ?? 
+        var toastQueue = exchange.Queues.FirstOrDefault(x => x.Id == "notification.toast") ?? 
                          throw new NullReferenceException("Очередь для уведомлений не найдена");
         messageBusClient.Subscribe(toastQueue.Name, async (ToastMessage message) => 
             await servicesHandler.SendToastAsync(message.UserId, message.Message, message.Method, message.Type));
         
-        var emailQueue = queues.FirstOrDefault(x => x.Id == "notification.email") ?? 
+        var emailQueue = exchange.Queues.FirstOrDefault(x => x.Id == "notification.email") ?? 
                          throw new NullReferenceException("Очередь для email уведомлений не найдена");
         messageBusClient.Subscribe(emailQueue.Name, async (EmailMessage message) => 
             await servicesHandler.SendEmailAsync(message.SendTo, message.Subject, message.Message));
         
-        var actionQueue = queues.FirstOrDefault(x => x.Id == "notification.email") ?? 
-                         throw new NullReferenceException("Очередь для действий не найдена");
+        var actionQueue = exchange.Queues.FirstOrDefault(x => x.Id == "notification.action") ?? 
+                          throw new NullReferenceException("Очередь для действий не найдена");
         messageBusClient.Subscribe(actionQueue.Name, async (ActionMessage message) => 
             await servicesHandler.SendActionAsync(message.UserId, message.Message, message.Method, message.Type));
         
